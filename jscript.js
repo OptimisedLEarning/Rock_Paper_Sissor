@@ -1,148 +1,73 @@
+document.addEventListener("DOMContentLoaded", function() {
+    let humanScore = 0;
+    let computerScore = 0;
 
-//  function for getting computer choice 
+    function playRound(humanChoice) {
+      const choices = ["rock", "paper", "scissor"];
+      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
 
-function getComputerChoice (){
-    const pick=["rock","paper", "scissor"];
-    const arrayRandomNumber = Math.floor (Math.random()* pick.length) ;
-    let computerChoice= pick[arrayRandomNumber]
-    console.log(computerChoice);
+      if (humanChoice === computerChoice) {
+        alert("Tie");
+      } else if ((humanChoice === "rock" && computerChoice === "scissor") ||
+                 (humanChoice === "scissor" && computerChoice === "paper") ||
+                 (humanChoice === "paper" && computerChoice === "rock")) {
+        alert("Human wins");
+        humanScore++;
+      } else {
+        alert("Computer wins");
+        computerScore++;
+      }
 
-    return computerChoice;
-}
+      const logMessage = `Human choice: ${humanChoice}, Computer choice: ${computerChoice}`;
+      displayLogMessage(logMessage);
+      displayScores();
 
-
-// Function  to get human choice
-
-function getHumanChoice(){
-   let  humanChoice = window.prompt("Select rock, paper or scissor");
-   console.log(humanChoice)
-   return  humanChoice.toLowerCase();
-}
-
-//  initial scores 
- let humanScore = 0;
- let computerScore =0;
-
-//  function call of  two variables 
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
- 
-//   function for single round
-function playRound(humanChoice,computerChoice){
-
-
-
-    if (humanChoice===computerChoice){
-        alert("Tie")
-        return (`humanScore :${humanScore} ,computerScore : ${computerScore}`);
+      if (humanScore >= 5 || computerScore >= 5) {
+        announceWinner();
+      }
     }
 
+    const rockBut = document.querySelector("#rock");
+    rockBut.addEventListener("click", () => playRound("rock"));
 
-    else if(humanSelection=="rock" && computerSelection == "scissor"){
-        
-        alert("human wins");
+    const paperBut = document.querySelector("#paper");
+    paperBut.addEventListener("click", () => playRound("paper"));
 
-        alert(`your choice :  ${humanChoice} and computer choice  : ${computerChoice} `);
+    const scissorBut = document.querySelector("#scissor");
+    scissorBut.addEventListener("click", () => playRound("scissor"));
 
-        humanScore += 1;
-        console.log(humanScore);
-        return humanScore;      
-    } 
-    else if(humanChoice=="scissor" && computerChoice == "rock"){
+    function displayLogMessage(message) {
+      const resultDiv = document.querySelector("#results-container");
+      const logItem = document.createElement("div");
+      logItem.textContent = message;
+      resultDiv.appendChild(logItem);
+    }
 
-        alert("computer wins ");
+    function displayScores() {
+      const scoreDiv = document.querySelector("#results-container");
+      scoreDiv.innerHTML = "";
 
-        alert(`your choice:  ${humanChoice} and computer choice is : ${computerChoice} `)
+      const humanScoreDisplay = document.createElement("p");
+      humanScoreDisplay.textContent = `Human score: ${humanScore}`;
+      scoreDiv.appendChild(humanScoreDisplay);
 
-        computerScore +=1;
-        console.log(computerScore);
-        return computerScore;
+      const computerScoreDisplay = document.createElement("p");
+      computerScoreDisplay.textContent = `Computer score: ${computerScore}`;
+      scoreDiv.appendChild(computerScoreDisplay);
+    }
 
-        }
-    else if(humanChoice=="scissor" && computerChoice == "paper"){
-            alert("human wins");
+    function announceWinner() {
+      const winnerMessage = humanScore > computerScore ? "Human wins the game!" :
+                            computerScore > humanScore ? "Computer wins the game!" :
+                            "It's a tie!";
+      const resultsDiv = document.querySelector("#results-container");
+      const winnerDisplay = document.createElement("p");
+      winnerDisplay.textContent = winnerMessage;
+      resultsDiv.appendChild(winnerDisplay);
 
-            alert(`your choice :  ${humanChoice} and computer choice  : ${computerChoice} `);
-            
-            humanScore += 1;
-            console.log(humanScore);
-            return humanScore;
-
-        }
-    else if(humanChoice=="paper" && computerChoice == "scissor"){
-            alert("computer wins ");
-
-            alert(`your choice:  ${humanChoice} and computer choice is : ${computerChoice} `);
-
-            computerScore +=1;
-            console.log(computerScore);
-            return computerScore;
-        
-     }   
-    else if(humanChoice=="paper" && computerChoice == "rock"){
-        
-            alert("human wins");
-    
-            alert(`your choice :  ${humanChoice} and computer choice  : ${computerChoice} `);
-            humanScore += 1;
-            console.log(humanScore);
-            return humanScore;
-            
-        }  
-    else if(humanChoice=="rock" && computerChoice == "paper"){
-
-            alert("computer wins ");
-
-            alert(`your choice:  ${humanChoice} and computer choice is : ${computerChoice} `);
-
-            computerScore +=1;
-            console.log(computerScore);
-            return computerScore;
-        
-        }  
-}
-
-
-playRound(humanSelection, computerSelection);
-
-
-//   function to play 5 rounds 
-function playGame(){
-  for (let round=0;round<=5;round++){
-    
-    
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-    
-    
-    playRound(humanSelection,computerSelection);}
-
-
- console.log(` Human Score: ${humanScore}, Computer Score: ${computerScore}`);
-}
-console.log(`Final Score: Human ${humanScore} - Computer ${computerScore}`);
-
-if (humanScore > computerScore) {
-    alert("Human wins the game!");
-} else if (computerScore > humanScore) {
-    alert("Computer wins the game!");
-} else {
-    alert("The game is a tie!");
-}
-
-
-    
-        
-        
-        
-            
-    
-
-
-  
-    
-    
-
-
-
-playGame()
+      // Disable buttons after game ends
+      document.querySelectorAll("#container button").forEach(button => {
+        button.disabled = true;
+      });
+    }
+  });
